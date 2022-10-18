@@ -20,13 +20,23 @@ class MarvelService {
         return this._transformCharacter(res.data.results[0])
     }
     _transformCharacter = (char) => {
-        let description = char.description;
+        let description = char.description,
+            thumbnail = char.thumbnail.path + '.' + char.thumbnail.extension,
+            thumbnailStyle = {'objectFit' : 'cover'}
+            
+        if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+            thumbnailStyle = {'objectFit' : 'unset'};
+        }
+
         return {
+            id: char.id,
             name: char.name,
-            description: description ? description.slice(0,200) + ' ...' : 'No description yet, Sorry! :(',
-            thumbnail:  char.thumbnail.path + '.' + char.thumbnail.extension,
+            description: description ? description : 'No description yet, Sorry! :(',
+            thumbnail:  thumbnail,
+            thumbnailStyle: thumbnailStyle,
             homepage: char.urls[0].url,
-            wiki: char.urls[1].url
+            wiki: char.urls[1].url,
+            comics: char.comics.items
         }
     }
 }
